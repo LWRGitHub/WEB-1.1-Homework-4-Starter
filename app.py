@@ -69,12 +69,13 @@ def detail(plant_id):
     # plant's id.
     # HINT: This query should be on the `harvests` collection, not the `plants`
     # collection.
-    harvests = ''
+    harvest = list(mongo.db.harvest.find({}))
+    print(harvest[0].date)
 
     context = {
         'plant' : plant_to_show['name'],
         'date_planted' : plant_to_show['date_planted'],
-        'harvests': harvests,
+        'harvests': harvest,
         'variety' : plant_to_show['variety'],
         'photo_url' : plant_to_show['photo_url'],
         'plant_id' : plant_id
@@ -107,7 +108,14 @@ def edit(plant_id):
     if request.method == 'POST':
         # TODO: Make an `update_one` database call to update the plant with the
         # given id. Make sure to put the updated fields in the `$set` object.
-        
+        plant = {
+            'name': request.form.get('plant_name'),
+            'variety': request.form.get('variety'),
+            'photo_url': request.form.get('photo'),
+            'date_planted': request.form.get('date_planted')
+        }
+
+        mongo.db.plants.update_one( {'_id': ObjectId(plant_id)}, {'$set': plant})
         
         return redirect(url_for('detail', plant_id=plant_id))
     else:
@@ -128,6 +136,7 @@ def edit(plant_id):
 def delete(plant_id):
     # TODO: Make a `delete_one` database call to delete the plant with the given
     # id.
+    mongo.db.plants.delete_one({'_id': ObjectId(plant_id)})
 
     # TODO: Also, make a `delete_many` database call to delete all harvests with
     # the given plant id.
