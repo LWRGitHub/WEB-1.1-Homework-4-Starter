@@ -69,13 +69,13 @@ def detail(plant_id):
     # plant's id.
     # HINT: This query should be on the `harvests` collection, not the `plants`
     # collection.
-    harvest = list(mongo.db.harvest.find({}))
-    print(harvest[0].date)
+    harvest = list(mongo.db.harvest.find({'plant_id':plant_id}))
+    print(harvest)
 
     context = {
         'plant' : plant_to_show['name'],
         'date_planted' : plant_to_show['date_planted'],
-        'harvests': harvest,
+        'harvest': harvest,
         'variety' : plant_to_show['variety'],
         'photo_url' : plant_to_show['photo_url'],
         'plant_id' : plant_id
@@ -122,7 +122,7 @@ def edit(plant_id):
         # TODO: Make a `find_one` database call to get the plant object with the
         # passed-in _id.
         plant_to_show = mongo.db.plants.find_one({'_id': ObjectId(plant_id)})
-        print(plant_to_show)
+        # print(plant_to_show)
         context = {
             'plant': plant_to_show['name'],
             'variety': plant_to_show['variety'],
@@ -140,6 +140,7 @@ def delete(plant_id):
 
     # TODO: Also, make a `delete_many` database call to delete all harvests with
     # the given plant id.
+    mongo.db.harvest.delete_many({'plant_id':plant_id})
 
     return redirect(url_for('plants_list'))
 

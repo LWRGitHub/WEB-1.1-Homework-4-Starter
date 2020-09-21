@@ -58,8 +58,9 @@
             <h3>Harvest History</h3>
 
             <ul>
-                <li>5/15/2020: Harvested 3 tomatoes</li>
-                <li>5/18/2020: Harvested 2 tomatoes</li>
+                {% for data in harvest %}
+                    <li>{{data.quantity}} {{plant}} harvested on, {{data.date}}</li>
+                {% endfor %}
             </ul>
         </section>
 
